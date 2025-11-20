@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           elementFormDefault="qualified">
+    
+    <xs:element name="RegistoCirurgias">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Cabecalho"/>
+                <xs:element ref="CirurgiaRegisto" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="Cabecalho">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="HospitalID" type="xs:string"/>
+                <xs:element name="RegistoID" type="xs:string"/> 
+                <xs:element name="PeriodoReferencia">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Mes">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="1"/>
+                                        <xs:maxInclusive value="12"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Ano" type="xs:integer"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="CirurgiaRegisto">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="EspecialidadeCirurgica" type="xs:string"/>
+                
+                <xs:element ref="ListasEspera"/>
+                <xs:element ref="TempoMedioEsperaProgramada"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="ListasEspera">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Geral" type="TipoUtentesLista"/>
+                <xs:element name="NaoOncologica" type="TipoUtentesLista"/>
+                <xs:element name="Oncologica" type="TipoUtentesLista"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="TipoUtentesLista">
+        <xs:sequence>
+            <xs:element name="UtentesEmLista">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="TempoMedioEsperaProgramada">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="TME_dias">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                            <xs:minInclusive value="0"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

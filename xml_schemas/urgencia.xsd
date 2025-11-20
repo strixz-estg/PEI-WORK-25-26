@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           elementFormDefault="qualified">
+    
+    <xs:element name="RegistoUrgencia">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Cabecalho"/>
+                <xs:element ref="Tipologia"/>
+                <xs:element ref="Estado"/>
+                <xs:element ref="UtentesEspera"/>
+                <xs:element ref="UtentesObservacao"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="Cabecalho">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="HospitalID" type="xs:string"/>
+                <xs:element name="RegistoID" type="xs:string"/> 
+                <xs:element name="MoradaHospital" type="xs:string"/>
+                <xs:element name="HorarioRegisto" type="xs:dateTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="Tipologia">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="geral"/>
+                <xs:enumeration value="pediatrica"/>
+                <xs:enumeration value="obstetrica"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="Estado">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Aberta"/>
+                <xs:enumeration value="Fechada"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:complexType name="TipoUtentesAfluencia">
+        <xs:sequence>
+            <xs:element name="NaoUrgente" type="xs:integer"/>
+            <xs:element name="PoucoUrgente" type="xs:integer"/>
+            <xs:element name="Urgente" type="xs:integer"/>
+            <xs:element name="MuitoUrgente" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="UtentesEspera" type="TipoUtentesAfluencia"/>
+    <xs:element name="UtentesObservacao" type="TipoUtentesAfluencia"/>
+    
+</xs:schema>
