@@ -1,3 +1,4 @@
+HOSPITAL
 ##### REMOVER DE TODOS OS DOCUMENTOS O "HospitalKey"
 db.hospitais.updateMany(
   {},
@@ -6,8 +7,18 @@ db.hospitais.updateMany(
 
 Motivo: não faz sentido ser duas "main keys" 
 
-##########################################################################################################
 
+
+##### Adicionar timestamp
+
+
+db.hospitais.updateMany(
+  { createdAt: { $exists: false } },
+  { $set: { createdAt: new Date() } }
+);
+
+##########################################################################################################
+SERVICOS:
 ##### Meter a prioty driscption bater certo com o PriorityCode 
 
 db.servicos.updateMany(
@@ -54,5 +65,94 @@ db.servicos.updateMany(
 )
 
 
+### temposesperaconsultacirurgia 
+Adicionar o campo hospitalid
+db.temposesperaconsultacirurgia.aggregate([
+  // 1) Normalizar HospitalName nos tempos
+  {
+    $addFields: {
+      hospitalNameNorm: {
+        $toLower: { $trim: { input: "$HospitalName" } }
+      }
+    }
+  },
 
-#### Ainda falt a ver o temposesperaconsultacirurgia e temposesperaemergencia
+  // 2) Lookup a hospitais para ir buscar HospitalID (o do CSV)
+  {
+    $lookup: {
+      from: "hospitais",
+      let: { rawName: "$hospitalNameNorm" },
+      pipeline: [
+        {
+          $addFields: {
+            hospitalNameNorm: {
+              $toLower: { $trim: { input: "$HospitalName" } }
+            }
+          }
+        },
+        {
+          $match: {
+            $expr: { $eq: ["$hospitalNameNorm", "$$rawName"] }
+          }
+        },
+        { $project: { HospitalID: 1, _id: 0 } }
+      ],
+      as: "hospitalInfo"
+    }
+  },
+
+  // 3) Ficar só com os que tiveram match
+  { $match: { "hospitalInfo.0": { $exists: true } } },
+
+  // 4) Meter o HospitalID no documento de tempos
+  {
+    $set: {
+      HospitalID: { $arrayElemAt: ["$hospitalInfo.HospitalID", 0] }
+    }
+  },
+
+  // 5) Limpar auxiliares
+  {
+    $project: {
+      hospitalNameNorm: 0,
+      hospitalInfo: 0
+    }
+  },
+
+  // 6) Gravar de volta na MESMA coleção
+  {
+    $merge: {
+      into: "temposesperaconsultacirurgia",
+      on: "_id",
+      whenMatched: "merge",
+      whenNotMatched: "discard"
+    }
+  }
+]);
+
+
+temposesperaemergencia
+
+colocar o lastupdate em formato data
+db.temposesperaemergencia.updateMany(
+  {},
+  [
+    {
+      $set: {
+        LastUpdate: {
+          $dateFromString: {
+            dateString: "$LastUpdate",
+            format: "%Y-%m-%d %H:%M:%S"
+          }
+        },
+        extractionDate: {
+          $dateFromString: {
+            dateString: "$extractionDate",
+            format: "%Y-%m-%d %H:%M:%S"
+          }
+        }
+      }
+    }
+  ]
+);
+
