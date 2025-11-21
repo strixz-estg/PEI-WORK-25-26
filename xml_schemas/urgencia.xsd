@@ -1,59 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     
-    <xs:element name="RegistoUrgencia">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="Cabecalho"/>
-                <xs:element ref="Tipologia"/>
-                <xs:element ref="Estado"/>
-                <xs:element ref="UtentesEspera"/>
-                <xs:element ref="UtentesObservacao"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+    <!-- ==================== TIPOS SIMPLES ==================== -->
     
-    <xs:element name="Cabecalho">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="HospitalID" type="xs:string"/>
-                <xs:element name="RegistoID" type="xs:string"/> 
-                <xs:element name="MoradaHospital" type="xs:string"/>
-                <xs:element name="HorarioRegisto" type="xs:dateTime"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+    <!-- ID do hospital: HOSP_001, HOSP_123, etc. -->
+    <xs:simpleType name="HospitalIDType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="HOSP_[0-9]{3}"/>
+        </xs:restriction>
+    </xs:simpleType>
     
-    <xs:element name="Tipologia">
-        <xs:simpleType>
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="geral"/>
-                <xs:enumeration value="pediatrica"/>
-                <xs:enumeration value="obstetrica"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
+    <!-- Estado da urgência -->
+    <xs:simpleType name="EstadoType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Aberta"/>
+            <xs:enumeration value="Fechada"/>
+        </xs:restriction>
+    </xs:simpleType>
     
-    <xs:element name="Estado">
-        <xs:simpleType>
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="Aberta"/>
-                <xs:enumeration value="Fechada"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
+    <!-- Tipologia da urgência -->
+    <xs:simpleType name="TipologiaType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="geral"/>
+            <xs:enumeration value="pediatrica"/>
+            <xs:enumeration value="obstetrica"/>
+        </xs:restriction>
+    </xs:simpleType>
     
-    <xs:complexType name="TipoUtentesAfluencia">
+    <!-- Contagens de triagem: nunca negativas -->
+    <xs:simpleType name="TriagemCountType">
+        <xs:restriction base="xs:nonNegativeInteger"/>
+    </xs:simpleType>
+    
+    <!-- ==================== TIPOS COMPLEXOS ==================== -->
+    
+    <!-- Cabeçalho do registo -->
+    <xs:complexType name="CabecalhoType">
         <xs:sequence>
-            <xs:element name="NaoUrgente" type="xs:integer"/>
-            <xs:element name="PoucoUrgente" type="xs:integer"/>
-            <xs:element name="Urgente" type="xs:integer"/>
-            <xs:element name="MuitoUrgente" type="xs:integer"/>
+            <xs:element name="HospitalID" type="HospitalIDType"/>
+            <xs:element name="RegistoID" type="xs:string"/>
+            <xs:element name="MoradaHospital" type="xs:string"/>
+            <xs:element name="HorarioRegisto" type="xs:dateTime"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:element name="UtentesEspera" type="TipoUtentesAfluencia"/>
-    <xs:element name="UtentesObservacao" type="TipoUtentesAfluencia"/>
+    <!-- Bloco de contagens por nível de urgência -->
+    <xs:complexType name="TriagemBlockType">
+        <xs:sequence>
+            <xs:element name="NaoUrgente"   type="TriagemCountType"/>
+            <xs:element name="PoucoUrgente" type="TriagemCountType"/>
+            <xs:element name="Urgente"      type="TriagemCountType"/>
+            <xs:element name="MuitoUrgente" type="TriagemCountType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Tipo principal do registo de urgência -->
+    <xs:complexType name="RegistoUrgenciaType">
+        <xs:sequence>
+            <xs:element name="Cabecalho"           type="CabecalhoType"/>
+            <xs:element name="Tipologia"           type="TipologiaType"/>
+            <xs:element name="Estado"              type="EstadoType"/>
+            <xs:element name="UtentesEspera"       type="TriagemBlockType"/>
+            <xs:element name="UtentesObservacao"   type="TriagemBlockType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- ==================== ROOT ELEMENT ==================== -->
+    
+    <xs:element name="RegistoUrgencia" type="RegistoUrgenciaType"/>
     
 </xs:schema>

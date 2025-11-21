@@ -5,8 +5,7 @@
     
     <Cabecalho>
         <HospitalID>HOSP_001</HospitalID>
-        
-        <RegistoID>CONS_HOSP_001_202510</RegistoID> 
+        <RegistoID>CONS_HOSP_001_202510</RegistoID>
         
         <PeriodoReferencia>
             <Mes>10</Mes>
@@ -16,7 +15,6 @@
     
     <EspecialidadeRegisto>
         <Especialidade>Cardiologia</Especialidade>
-        
         <PopulacaoAlvo>adulto</PopulacaoAlvo>
         
         <ListasEspera>
@@ -33,12 +31,16 @@
         
         <TemposMediosResposta>
             <Normal>
-                <TMR_dias>90</TMR_dias> </Normal>
+                <TMR_dias>90</TMR_dias>
+            </Normal>
             <Prioritario>
-                <TMR_dias>45</TMR_dias> </Prioritario>
+                <TMR_dias>45</TMR_dias>
+            </Prioritario>
             <MuitoPrioritario>
-                <TMR_dias>10</TMR_dias> </MuitoPrioritario>
+                <TMR_dias>10</TMR_dias>
+            </MuitoPrioritario>
         </TemposMediosResposta>
+        
     </EspecialidadeRegisto>
     
 </RegistoConsultas>

@@ -5,16 +5,12 @@
     
     <Cabecalho>
         <HospitalID>HOSP_001</HospitalID>
-
-        <RegistoID>URG_HOSP_001_12345</RegistoID> 
-
-        <MoradaHospital>Avenida Professor Egas Moniz, Lisboa</MoradaHospital> 
-        
-        <HorarioRegisto>2025-11-20T17:45:00Z</HorarioRegisto> 
+        <RegistoID>URG_HOSP_001_20251120T174500</RegistoID>
+        <MoradaHospital>Avenida Professor Egas Moniz, Lisboa</MoradaHospital>
+        <HorarioRegisto>2025-11-20T17:45:00Z</HorarioRegisto>
     </Cabecalho>
     
     <Tipologia>pediatrica</Tipologia>
-    
     <Estado>Aberta</Estado>
     
     <UtentesEspera>

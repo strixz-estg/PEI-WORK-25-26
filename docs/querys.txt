@@ -1,0 +1,58 @@
+##### REMOVER DE TODOS OS DOCUMENTOS O "HospitalKey"
+db.hospitais.updateMany(
+  {},
+  { $unset: { HospitalKey: "" } }
+);
+
+Motivo: não faz sentido ser duas "main keys" 
+
+##########################################################################################################
+
+##### Meter a prioty driscption bater certo com o PriorityCode 
+
+db.servicos.updateMany(
+  {},
+  [
+    {
+      $set: {
+        PriorityDescription: {
+          $switch: {
+            branches: [
+              { case: { $eq: [ "$PriorityCode", 1 ] }, then: "Normal" },
+              { case: { $eq: [ "$PriorityCode", 2 ] }, then: "Prioritário" },
+              { case: { $eq: [ "$PriorityCode", 3 ] }, then: "Muito prioritário" }
+            ],
+            default: "Desconhecido"
+          }
+        }
+      }
+    }
+  ]
+)
+
+##########################################################################################################
+
+### Garantiro TypeDescription bate certo com o TypeCoder que o TypeDescription bate certo com o TypeCode
+
+db.servicos.updateMany(
+  {},
+  [
+    {
+      $set: {
+        TypeDescription: {
+          $switch: {
+            branches: [
+              { case: { $eq: ["$TypeCode", 1] }, then: "Surgery" },
+              { case: { $eq: ["$TypeCode", 2] }, then: "Appointment" }
+            ],
+            default: "Unknown"
+          }
+        }
+      }
+    }
+  ]
+)
+
+
+
+#### Ainda falt a ver o temposesperaconsultacirurgia e temposesperaemergencia

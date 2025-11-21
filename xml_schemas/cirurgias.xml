@@ -5,8 +5,7 @@
     
     <Cabecalho>
         <HospitalID>HOSP_001</HospitalID>
-        
-        <RegistoID>CIR_HOSP_001_202510</RegistoID> 
+        <RegistoID>CIR_HOSP_001_202510</RegistoID>
         
         <PeriodoReferencia>
             <Mes>10</Mes>

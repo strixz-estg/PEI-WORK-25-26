@@ -1,100 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     
+    <!-- ==================== TIPOS SIMPLES ==================== -->
+    
+    <!-- HOSP_001 -->
+    <xs:simpleType name="HospitalIDType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="HOSP_[0-9]{3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- adulto / crianca -->
+    <xs:simpleType name="PopulacaoAlvoType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="adulto"/>
+            <xs:enumeration value="crianca"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Número de utentes em lista -->
+    <xs:simpleType name="ListaEsperaCountType">
+        <xs:restriction base="xs:nonNegativeInteger"/>
+    </xs:simpleType>
+    
+    <!-- Tempos médios de resposta em dias -->
+    <xs:simpleType name="TMRDiasType">
+        <xs:restriction base="xs:nonNegativeInteger"/>
+    </xs:simpleType>
+    
+    <!-- ==================== TIPOS COMPLEXOS ==================== -->
+    
+    <!-- Cabeçalho -->
+    <xs:complexType name="CabecalhoType">
+        <xs:sequence>
+            <xs:element name="HospitalID" type="HospitalIDType"/>
+            <xs:element name="RegistoID" type="xs:string"/>
+            <xs:element name="PeriodoReferencia">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Mes">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="12"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="Ano">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1900"/>
+                                    <xs:maxInclusive value="2100"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Bloco da lista de espera -->
+    <xs:complexType name="ListaEsperaType">
+        <xs:sequence>
+            <xs:element name="UtentesEmLista" type="ListaEsperaCountType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Tempos médios resposta -->
+    <xs:complexType name="TemposRespostaType">
+        <xs:sequence>
+            <xs:element name="Normal">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="TMR_dias" type="TMRDiasType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="Prioritario">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="TMR_dias" type="TMRDiasType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="MuitoPrioritario">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="TMR_dias" type="TMRDiasType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Registo de especialidade -->
+    <xs:complexType name="EspecialidadeRegistoType">
+        <xs:sequence>
+            <xs:element name="Especialidade" type="xs:string"/>
+            <xs:element name="PopulacaoAlvo" type="PopulacaoAlvoType"/>
+            
+            <xs:element name="ListasEspera">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Geral" type="ListaEsperaType"/>
+                        <xs:element name="NaoOncologica" type="ListaEsperaType"/>
+                        <xs:element name="Oncologica" type="ListaEsperaType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="TemposMediosResposta" type="TemposRespostaType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- ROOT -->
     <xs:element name="RegistoConsultas">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="Cabecalho"/>
-                <xs:element ref="EspecialidadeRegisto" maxOccurs="unbounded"/>
+                <xs:element name="Cabecalho" type="CabecalhoType"/>
+                <xs:element name="EspecialidadeRegisto" type="EspecialidadeRegistoType"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="Cabecalho">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="HospitalID" type="xs:string"/>
-                <xs:element name="RegistoID" type="xs:string"/> 
-                <xs:element name="PeriodoReferencia">
-                    <xs:complexType>
-                        <xs:sequence>  <xs:element name="Mes">
-                                <xs:simpleType>
-                                    <xs:restriction base="xs:integer">
-                                        <xs:minInclusive value="1"/>
-                                        <xs:maxInclusive value="12"/>
-                                    </xs:restriction>
-                                </xs:simpleType>
-                            </xs:element>
-                            <xs:element name="Ano" type="xs:integer"/>
-                        </xs:sequence> </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="EspecialidadeRegisto">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Especialidade" type="xs:string"/>
-                
-                <xs:element name="PopulacaoAlvo">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="adulto"/>
-                            <xs:enumeration value="crianca"/>
-                            <xs:enumeration value="nao_aplicavel"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                
-                <xs:element ref="ListasEspera"/>
-                <xs:element ref="TemposMediosResposta"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="ListasEspera">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Geral" type="TipoUtentesLista"/>
-                <xs:element name="NaoOncologica" type="TipoUtentesLista"/>
-                <xs:element name="Oncologica" type="TipoUtentesLista"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:complexType name="TipoUtentesLista">
-        <xs:sequence>
-            <xs:element name="UtentesEmLista">
-                <xs:simpleType>
-                    <xs:restriction base="xs:integer">
-                        <xs:minInclusive value="0"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:element name="TemposMediosResposta">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Normal" type="TipoTMR"/>
-                <xs:element name="Prioritario" type="TipoTMR"/>
-                <xs:element name="MuitoPrioritario" type="TipoTMR"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:complexType name="TipoTMR">
-        <xs:sequence>
-            <xs:element name="TMR_dias">
-                <xs:simpleType>
-                    <xs:restriction base="xs:integer">
-                        <xs:minInclusive value="0"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
 </xs:schema>
