@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UrgencyRegister xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Urgency.xsd">
+    <Header>
+        <InstitutionId>151</InstitutionId>
+        <HospitalName>Hospital São João</HospitalName>
+        <Timestamp>2025-11-20T14:30:00</Timestamp>
+    </Header>
+    <Data>
+        <Typology>Pediatrica</Typology>
+        <OpenState>Aberta</OpenState>
+        <Address>Porto</Address>
+        <WaitingPatients>
+            <NonUrgent>2</NonUrgent>
+            <LessUrgent>5</LessUrgent>
+            <Urgent>10</Urgent>
+            <VeryUrgent>1</VeryUrgent>
+        </WaitingPatients>
+        <ObservingPatients>
+            <NonUrgent>0</NonUrgent>
+            <LessUrgent>0</LessUrgent>
+            <Urgent>2</Urgent>
+            <VeryUrgent>0</VeryUrgent>
+        </ObservingPatients>
+    </Data>
+</UrgencyRegister>

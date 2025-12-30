@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConsultationsRegister xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Consultations.xsd">
+    <Header>
+        <InstitutionId>151</InstitutionId>
+        <HospitalName>Hospital São João</HospitalName>
+        <ReferencePeriod>2025-11</ReferencePeriod>
+    </Header>
+    <Data>
+        <Consultation>
+            <Speciality>Cardiologia</Speciality>
+            <TargetPopulation>Adulto</TargetPopulation>
+            <WaitingListCounts>
+                <General>100</General>
+                <NonOncological>90</NonOncological>
+                <Oncological>10</Oncological>
+            </WaitingListCounts>
+            <AverageResponseTimes>
+                <Normal>30.5</Normal>
+                <Priority>15.0</Priority>
+                <VeryPriority>2.0</VeryPriority>
+            </AverageResponseTimes>
+        </Consultation>
+    </Data>
+</ConsultationsRegister>

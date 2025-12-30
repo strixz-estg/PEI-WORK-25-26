@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SurgeryReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Surgeries.xsd">
+    <Header>
+        <InstitutionId>151</InstitutionId>
+        <HospitalName>Hospital São João</HospitalName>
+        <ReferencePeriod>2025-11</ReferencePeriod>
+    </Header>
+    <SurgicalData>
+        <SurgeryEntry>
+            <Specialty>Ortopedia</Specialty>
+            <WaitingListCounts>
+                <General>300</General>
+                <NonOncological>298</NonOncological>
+                <Oncological>2</Oncological>
+            </WaitingListCounts>
+            <AverageWaitTimeDays>120.5</AverageWaitTimeDays>
+        </SurgeryEntry>
+    </SurgicalData>
+</SurgeryReport>

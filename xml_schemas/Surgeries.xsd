@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="Commons.xsd"/>
+    
+    <xs:simpleType name="SurgicalSpecialtyType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CirurgiaGeral"/>
+            <xs:enumeration value="Ortopedia"/>
+            <xs:enumeration value="Oftalmologia"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:element name="SurgeryReport">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Header">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="InstitutionId" type="InstitutionIdType"/>
+                            <xs:element name="HospitalName" type="HospitalNameType"/>
+                            <xs:element name="ReferencePeriod" type="xs:gYearMonth"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="SurgicalData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SurgeryEntry" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Specialty" type="SurgicalSpecialtyType"/>
+                                        <xs:element name="WaitingListCounts" type="WaitingListCountsType"/>
+                                        <xs:element name="AverageWaitTimeDays" type="xs:decimal"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
