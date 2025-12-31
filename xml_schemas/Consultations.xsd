@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="Commons.xsd"/>
-    
+
+    <xs:simpleType name="InstitutionIdType">
+        <xs:restriction base="xs:nonNegativeInteger"/>
+    </xs:simpleType>
+    <xs:simpleType name="HospitalNameType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="TargetPopulationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Adulto"/>
+            <xs:enumeration value="Criança"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="WaitingListCountsType">
+        <xs:sequence>
+            <xs:element name="General" type="xs:nonNegativeInteger"/>
+            <xs:element name="NonOncological" type="xs:nonNegativeInteger"/>
+            <xs:element name="Oncological" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="ConsultationsRegister">
         <xs:complexType>
             <xs:sequence>

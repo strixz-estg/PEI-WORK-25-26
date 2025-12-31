@@ -1,115 +1,136 @@
+/**
+ * ============================================================================
+ * HEALTH TIME API - Entry Point
+ * ============================================================================
+ * Autor: Grupo 7
+ * Unidade Curricular: PEI 2025/2026
+ * Descrição: Servidor principal que gere a ingestão de dados hospitalares (XML)
+ * e a integração com MongoDB Atlas.
+ * ============================================================================
+ */
+// Configuração forçada do Java para evitar erros de encoding no Windows
+process.env.JAVA_TOOL_OPTIONS = '-Duser.language=en -Duser.country=US -Dfile.encoding=UTF-8';
+
 const express = require('express');
-const { XMLParser } = require('fast-xml-parser');
-const validator = require('xsd-schema-validator');
+const mongoose = require('mongoose');
 const path = require('path');
-const fs = require('fs');
 
+// --- IMPORTS DE MÓDULOS INTERNOS ---
+// Middleware de Validação XML
+const xmlValidationMiddleware = require('./middleware/xmlValidator');
+
+// 1. Rotas de Ingestão (XML)
+const urgenciasRoutes = require('./routes/urgencias');
+const consultasRoutes = require('./routes/consultas');
+const cirurgiasRoutes = require('./routes/cirurgias');
+
+// 2. Rotas de Leitura/Analytics (JSON) - NOVO!
+const apiRoutes = require('./routes/api');
+
+// --- CONFIGURAÇÕES INICIAIS ---
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const parser = new XMLParser({
-    explicitArray: false,
-    ignoreAttributes: false,
-    attributeNamePrefix: "@_", 
-    numberParseOptions: {
-        hex: true,
-        leadingZeros: false,
-    }
+// String de Conexão MongoDB Atlas
+const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb.net/healthtime?appName=CLUSTER-PEI-GROUP7';
+
+
+// ============================================================================
+// 1. CONEXÃO À BASE DE DADOS
+// ============================================================================
+mongoose.connect(mongoURI)
+  .then(() => {
+      console.log('╔══════════════════════════════════════════╗');
+      console.log('║   LIGADO AO MONGODB ATLAS COM SUCESSO!   ║');
+      console.log('╚══════════════════════════════════════════╝');
+  })
+  .catch(err => {
+      console.error('❌ ERRO CRÍTICO: Não foi possível ligar à Base de Dados.');
+      console.error('Detalhes:', err.message);
+  });
+
+
+// ============================================================================
+// 2. MIDDLEWARES GLOBAIS
+// ============================================================================
+
+// Logger de Pedidos
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
 });
 
-const xmlValidationMiddleware = [
-    express.text({ type: ['application/xml', 'text/xml'] }),
+// Preparação para XML (String body)
+app.use(express.text({ type: ['application/xml', 'text/xml'] }));
 
-    async (req, res, next) => {
-        if (req.get('Content-Type') && 
-           (req.get('Content-Type').includes('xml')) && 
-           typeof req.body === 'string') {
-
-            console.log('--> Recebida requisição XML. A validar...');
-
-            const schemaPath = path.join(__dirname, ''); //caminhos xsd !!
-
-            if (!fs.existsSync(schemaPath)) {
-                return res.status(500).json({ 
-                    status: 'error', 
-                    message: 'Ficheiro XSD não encontrado no servidor.' 
-                });
-            }
-
-            try {
-             
-                await validator.validateXML(req.body.trim(), schemaPath);
-                
-                const parsed = parser.parse(req.body);
-                
-                req.body = parsed;
-                
-                console.log('--> XML Válido e convertido com sucesso.');
-                next(); 
-
-            } catch (err) {
-                console.error("Erro na validação:", err);
-
-                if (err.valid === false || (err.message && err.message.includes('invalid xml'))) {
-                    return res.status(400).json({
-                        status: 'error',
-                        message: "Formato XML inválido ou não corresponde ao XSD",
-                        validationErrors: err.messages || err.message 
-                    });
-                }
-
-                return res.status(500).json({
-                    status: 'error',
-                    message: "Erro interno no processamento do XML",
-                    details: err.message
-                });
-            }
-        } else {
-            next();
-        }
-    }
-];
-
+// Validador de XML (XSD)
 app.use(xmlValidationMiddleware);
-app.use(express.json()); 
 
-// --- ROTAS DA API ---
+// Suporte a JSON padrão
+app.use(express.json());
 
-// Rota para Receber Urgências
-app.post('/api/urgencias', (req, res) => {
-    console.log("Dados de Urgência Recebidos:", req.body);
-    
-    res.json({
-        status: 'success',
-        message: 'Urgência recebida e validada!',
-        dadosProcessados: req.body
-    });
-    // para usares os campos depois :
-    const nomeHospital = dados.Header.HospitalName; 
-    // = "Hospital São João"
-});
 
-// Rota para Receber Consultas
-app.post('/api/consultas', (req, res) => {
-    console.log("Dados de Consulta Recebidos:", req.body);
-    res.json({
-        status: 'success',
-        message: 'Consultas recebidas e validadas!',
-        dadosProcessados: req.body
+// ============================================================================
+// 3. DEFINIÇÃO DE ROTAS (Endpoints)
+// ============================================================================
+
+// Health Check
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'Health Time API está Online! 🚀',
+        status: 'OK',
+        timestamp: new Date()
     });
 });
 
-// Rota para Receber Cirurgias
-app.post('/api/cirurgias', (req, res) => {
-    console.log("Dados de Cirurgia Recebidos:", req.body);
-    res.json({
-        status: 'success',
-        message: 'Cirurgias recebidas e validadas!',
-        dadosProcessados: req.body
+// --- A. ROTAS DE INGESTÃO (Receber XML) ---
+app.use('/api/urgencias', urgenciasRoutes);
+app.use('/api/consultas', consultasRoutes);
+app.use('/api/cirurgias', cirurgiasRoutes);
+
+// --- B. ROTAS DE ANALYTICS (Enviar JSON) ---
+// Isto liga o teu ficheiro api.js.
+// As rotas ficarão: /api/analytics/urgencias/medias, etc.
+app.use('/api', apiRoutes);
+
+
+// ============================================================================
+// 4. TRATAMENTO DE ERROS
+// ============================================================================
+
+// Rota 404
+app.use((req, res, next) => {
+    res.status(404).json({
+        status: 'error',
+        message: 'Rota não encontrada. Verifique o URL.'
     });
 });
 
-// Inicia o Servidor
+// Erro 500
+app.use((err, req, res, next) => {
+    console.error('❌ Erro Interno:', err.stack);
+    res.status(500).json({
+        status: 'error',
+        message: 'Ocorreu um erro interno no servidor.',
+        error: err.message
+    });
+});
+
+
+// ============================================================================
+// 5. INICIALIZAÇÃO DO SERVIDOR
+// ============================================================================
 app.listen(PORT, () => {
-    console.log(`Servidor a correr na porta ${PORT}`);
+    console.log(`\n🚀 Servidor Health Time a correr na porta: ${PORT}`);
+    console.log(`➜  Local:   http://localhost:${PORT}`);
+    console.log(`➜  Rotas:   /api/urgencias, /api/consultas, /api/cirurgias`);
+    console.log(`➜  Stats:   /api/analytics/...\n`);
+});
+
+// Graceful Shutdown
+process.on('SIGINT', async () => {
+    console.log('\n🛑 A encerrar servidor...');
+    await mongoose.connection.close();
+    console.log('MongoDB desconectado.');
+    process.exit(0);
 });

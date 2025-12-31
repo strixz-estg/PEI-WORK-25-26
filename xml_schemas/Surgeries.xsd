@@ -1,12 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="Commons.xsd"/>
-    
+
+    <xs:simpleType name="InstitutionIdType">
+        <xs:restriction base="xs:nonNegativeInteger"/>
+    </xs:simpleType>
+    <xs:simpleType name="HospitalNameType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="TargetPopulationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Adulto"/>
+            <xs:enumeration value="Criança"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="WaitingListCountsType">
+        <xs:sequence>
+            <xs:element name="General" type="xs:nonNegativeInteger"/>
+            <xs:element name="NonOncological" type="xs:nonNegativeInteger"/>
+            <xs:element name="Oncological" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:simpleType name="SurgicalSpecialtyType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="CirurgiaGeral"/>
-            <xs:enumeration value="Ortopedia"/>
+            <xs:enumeration value="Anestesiologia"/>
+            <xs:enumeration value="Angiologia e Cirurgia Vascular"/>
+            <xs:enumeration value="Bloco"/>
+            <xs:enumeration value="Cardiologia Geral"/>
+            <xs:enumeration value="Cirurgia Cabeça e Pescoço"/>
+            <xs:enumeration value="Cirurgia Cardiotorácica"/>
+            <xs:enumeration value="Cirurgia Digestiva Baixa (cólon e recto)"/>
+            <xs:enumeration value="Cirurgia Geral"/>
+            <xs:enumeration value="Cirurgia Maxilo Facial"/>
+            <xs:enumeration value="Cirurgia Pediátrica"/>
+            <xs:enumeration value="Cirurgia Plástica  e Reconstrutiva"/>
+            <xs:enumeration value="Cirurgia Torácica"/>
+            <xs:enumeration value="Cirurgia Vascular"/>
+            <xs:enumeration value="Dermato-Venereologia"/>
+            <xs:enumeration value="Dermatologia"/>
+            <xs:enumeration value="Dor"/>
+            <xs:enumeration value="Estomatologia"/>
+            <xs:enumeration value="Gastroenterologia"/>
+            <xs:enumeration value="Ginecologia"/>
+            <xs:enumeration value="Ginecologia - Obstetrícia"/>
+            <xs:enumeration value="Nefrologia"/>
+            <xs:enumeration value="Neurocirurgia"/>
+            <xs:enumeration value="Neuropatologia"/>
+            <xs:enumeration value="Neuroradiologia"/>
+            <xs:enumeration value="Obstetrícia"/>
             <xs:enumeration value="Oftalmologia"/>
+            <xs:enumeration value="Ortopedia"/>
+            <xs:enumeration value="Otorrinolaringologia"/>
+            <xs:enumeration value="Pediatria"/>
+            <xs:enumeration value="Pneumologia"/>
+            <xs:enumeration value="Radiodiagnóstico"/>
+            <xs:enumeration value="Radioterapia"/>
+            <xs:enumeration value="Reumatologia"/>
+            <xs:enumeration value="Senologia"/>
+            <xs:enumeration value="Transplante Hepático"/>
+            <xs:enumeration value="Transplante Medula Óssea"/>
+            <xs:enumeration value="Unidade Tratamento Cirúrgico da Obesidade"/>
+            <xs:enumeration value="Unidade de Queimados"/>
+            <xs:enumeration value="Urologia"/>
+            <xs:enumeration value="CirurgiaGeral"/>
         </xs:restriction>
     </xs:simpleType>
     

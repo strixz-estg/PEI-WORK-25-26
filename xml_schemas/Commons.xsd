@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    
+
     <xs:simpleType name="InstitutionIdType">
         <xs:restriction base="xs:nonNegativeInteger"/>
     </xs:simpleType>
@@ -23,5 +23,55 @@
             <xs:element name="Oncological" type="xs:nonNegativeInteger"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:simpleType name="OpenStateType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Aberta"/>
+            <xs:enumeration value="Fechada"/>
+        </xs:restriction>
+    </xs:simpleType>
     
+    <xs:simpleType name="UrgencyTypologyType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Geral"/>
+            <xs:enumeration value="Pediatrica"/>
+            <xs:enumeration value="Obstetrica"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="TriageScaleType">
+        <xs:sequence>
+            <xs:element name="NonUrgent" type="xs:nonNegativeInteger"/>
+            <xs:element name="LessUrgent" type="xs:nonNegativeInteger"/>
+            <xs:element name="Urgent" type="xs:nonNegativeInteger"/>
+            <xs:element name="VeryUrgent" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="UrgencyRegister">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Header">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="InstitutionId" type="InstitutionIdType"/>
+                            <xs:element name="HospitalName" type="HospitalNameType"/>
+                            <xs:element name="Timestamp" type="xs:dateTime"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Typology" type="UrgencyTypologyType"/>
+                            <xs:element name="OpenState" type="OpenStateType"/>
+                            <xs:element name="Address" type="xs:string"/>
+                            <xs:element name="WaitingPatients" type="TriageScaleType"/>
+                            <xs:element name="ObservingPatients" type="TriageScaleType"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

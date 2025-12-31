@@ -24,6 +24,10 @@
   "dependencies": {
     "express": "^5.2.1",
     "fast-xml-parser": "^5.3.3",
+    "install": "^0.13.0",
+    "mongodb": "^6.21.0",
+    "mongoose": "^8.21.0",
+    "npm": "^10.9.4",
     "xsd-schema-validator": "^0.11.0"
   }
 }
