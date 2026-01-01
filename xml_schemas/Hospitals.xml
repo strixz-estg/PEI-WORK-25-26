@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Hospitals xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Hospitals.xsd">
+    
+    <Hospital>
+        <InstitutionId>227</InstitutionId>
+        <HospitalName>Hospital Pulido Valente</HospitalName>        
+        <Location>
+            <Address>Alameda das Linhas de Torres, 117</Address>
+            <PostalCode>1769-001</PostalCode>
+            <City>Lisboa</City>
+            <District>Lisboa</District>
+            <Coordinates>
+                <Lat>38.765467</Lat>
+                <Long>-9.157316</Long>
+            </Coordinates>
+        </Location>
+        <Contacts>
+            <Phone>217548000</Phone>
+            <Email>administracao@chln.min-saude.pt</Email>
+        </Contacts>
+        <Region>
+            <Nuts1>Continente</Nuts1>
+            <Nuts2>Oeste e Vale do Tejo</Nuts2>
+            <Nuts3>Oeste</Nuts3>
+        </Region>
+    </Hospital>
+    
+    <Hospital>
+        <InstitutionId>999</InstitutionId>
+        <HospitalName>Hospital de Teste Opcional</HospitalName>        
+        <Location>
+            <Address>Rua de Exemplo, 123</Address>
+            <PostalCode>4000-001</PostalCode>
+            <City>Porto</City>
+            <District>Porto</District>
+        </Location>
+        
+        <Region>
+            <Nuts1>Continente</Nuts1>
+            <Nuts2>Norte</Nuts2>
+            <Nuts3>Grande Porto</Nuts3>
+        </Region>
+    </Hospital>
+    
+</Hospitals>
