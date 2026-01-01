@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <xs:simpleType name="TypeCodeType">
+        <xs:restriction base="xs:int">
+            <xs:enumeration value="1"/> <xs:enumeration value="2"/> </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="PriorityCodeType">
+        <xs:restriction base="xs:int">
+            <xs:enumeration value="0"/> <xs:enumeration value="1"/> <xs:enumeration value="2"/> <xs:enumeration value="3"/> </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:element name="Services">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Service" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ServiceKey" type="xs:int" minOccurs="1"/>
+                            <xs:element name="Speciality" type="xs:string" minOccurs="1"/>
+                            <xs:element name="TypeCode" type="TypeCodeType" minOccurs="1"/>
+                            <xs:element name="PriorityCode" type="PriorityCodeType" minOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

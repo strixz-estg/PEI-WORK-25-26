@@ -2,24 +2,26 @@
 <UrgencyRegister xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Urgency.xsd">
     <Header>
         <InstitutionId>151</InstitutionId>
-        <HospitalName>Hospital São João</HospitalName>
-        <Timestamp>2025-11-20T14:30:00</Timestamp>
+        <HospitalName>Hospital de Santa Maria</HospitalName>
+        <LastUpdate>2025-02-16T11:25:53.679</LastUpdate>
+        <ExtractionDate>2025-02-16T11:37:54.852Z</ExtractionDate>
     </Header>
     <Data>
-        <Typology>Pediatrica</Typology>
-        <OpenState>Aberta</OpenState>
-        <Address>Porto</Address>
-        <WaitingPatients>
-            <NonUrgent>2</NonUrgent>
-            <LessUrgent>5</LessUrgent>
-            <Urgent>10</Urgent>
-            <VeryUrgent>1</VeryUrgent>
-        </WaitingPatients>
-        <ObservingPatients>
-            <NonUrgent>0</NonUrgent>
-            <LessUrgent>0</LessUrgent>
-            <Urgent>2</Urgent>
-            <VeryUrgent>0</VeryUrgent>
-        </ObservingPatients>
+        <EmergencyTypeCode>1</EmergencyTypeCode>
+        <Status>Aberta</Status>
+        
+        <WaitingTriage>
+            <NonUrgent><Time>0</Time><Length>0</Length></NonUrgent>
+            <LessUrgent><Time>90</Time><Length>25</Length></LessUrgent>
+            <Urgent><Time>45</Time><Length>12</Length></Urgent>
+            <VeryUrgent><Time>15</Time><Length>2</Length></VeryUrgent>
+        </WaitingTriage>
+        
+        <ObservationTriage>
+            <NonUrgent><Time>0</Time><Length>2</Length></NonUrgent>
+            <LessUrgent><Time>0</Time><Length>8</Length></LessUrgent>
+            <Urgent><Time>0</Time><Length>10</Length></Urgent>
+            <VeryUrgent><Time>0</Time><Length>4</Length></VeryUrgent>
+        </ObservationTriage>
     </Data>
 </UrgencyRegister>

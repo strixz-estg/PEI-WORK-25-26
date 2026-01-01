@@ -1,53 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
-    <xs:simpleType name="InstitutionIdType">
-        <xs:restriction base="xs:nonNegativeInteger"/>
-    </xs:simpleType>
-    <xs:simpleType name="HospitalNameType">
-        <xs:restriction base="xs:string"/>
-    </xs:simpleType>
-    <xs:simpleType name="TargetPopulationType">
+    
+    <xs:simpleType name="MonthType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Adulto"/>
-            <xs:enumeration value="Criança"/>
+            <xs:enumeration value="Janeiro"/>
+            <xs:enumeration value="Fevereiro"/>
+            <xs:enumeration value="Março"/>
+            <xs:enumeration value="Abril"/>
+            <xs:enumeration value="Maio"/>
+            <xs:enumeration value="Junho"/>
+            <xs:enumeration value="Julho"/>
+            <xs:enumeration value="Agosto"/>
+            <xs:enumeration value="Setembro"/>
+            <xs:enumeration value="Outubro"/>
+            <xs:enumeration value="Novembro"/>
+            <xs:enumeration value="Dezembro"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:complexType name="WaitingListCountsType">
+    
+    <xs:complexType name="CountsBreakdownType">
         <xs:sequence>
-            <xs:element name="General" type="xs:nonNegativeInteger"/>
-            <xs:element name="NonOncological" type="xs:nonNegativeInteger"/>
-            <xs:element name="Oncological" type="xs:nonNegativeInteger"/>
+            <xs:element name="General" type="xs:int" minOccurs="1"/>
+            <xs:element name="NonOncological" type="xs:int" minOccurs="1"/>
+            <xs:element name="Oncological" type="xs:int" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
-
+    
+    <xs:complexType name="WaitTimeBreakdownType">
+        <xs:sequence>
+            <xs:element name="General" type="xs:decimal" minOccurs="1"/>
+            <xs:element name="NonOncological" type="xs:decimal" minOccurs="1"/>
+            <xs:element name="Oncological" type="xs:decimal" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ResponseTimeBreakdownType">
+        <xs:sequence>
+            <xs:element name="Normal" type="xs:decimal" minOccurs="1"/>
+            <xs:element name="Prioritario" type="xs:decimal" minOccurs="1"/>
+            <xs:element name="MuitoPrioritario" type="xs:decimal" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:element name="ConsultationsRegister">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Header">
+                
+                <xs:element name="Header" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="InstitutionId" type="InstitutionIdType"/>
-                            <xs:element name="HospitalName" type="HospitalNameType"/>
-                            <xs:element name="ReferencePeriod" type="xs:gYearMonth"/>
+                            <xs:element name="InstitutionId" type="xs:int" minOccurs="1"/>
+                            <xs:element name="HospitalName" type="xs:string" minOccurs="1"/>
+                            <xs:element name="SubmissionDate" type="xs:dateTime" minOccurs="1"/>
+                            <xs:element name="DateReference" minOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Month" type="MonthType" minOccurs="1"/>
+                                        <xs:element name="Year" type="xs:int" minOccurs="1"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Data">
+                
+                <xs:element name="Data" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Consultation" maxOccurs="unbounded">
+                            <xs:element name="ConsultationEntry" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="Speciality" type="xs:string"/>
-                                        <xs:element name="TargetPopulation" type="TargetPopulationType"/>
-                                        <xs:element name="WaitingListCounts" type="WaitingListCountsType"/>
-                                        <xs:element name="AverageResponseTimes">
+                                        <xs:element name="ServiceKey" type="xs:int" minOccurs="1"/>
+                                        <xs:element name="Speciality" type="xs:string" minOccurs="1"/>
+                                        <xs:element name="Stats" minOccurs="1">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="Normal" type="xs:decimal"/>
-                                                    <xs:element name="Priority" type="xs:decimal"/>
-                                                    <xs:element name="VeryPriority" type="xs:decimal"/>
+                                                    <xs:element name="WaitingListCounts" type="CountsBreakdownType" minOccurs="1"/>
+                                                    <xs:element name="AverageWaitDays" type="WaitTimeBreakdownType" minOccurs="1"/>
+                                                    <xs:element name="AverageResponseTime" type="ResponseTimeBreakdownType" minOccurs="1"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
@@ -57,6 +87,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                
             </xs:sequence>
         </xs:complexType>
     </xs:element>

@@ -2,18 +2,26 @@
 <SurgeryReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Surgeries.xsd">
     <Header>
         <InstitutionId>151</InstitutionId>
-        <HospitalName>Hospital São João</HospitalName>
-        <ReferencePeriod>2025-11</ReferencePeriod>
+        <HospitalName>Hospital de Santa Maria</HospitalName>
+        <SubmissionDate>2025-04-05T10:00:00</SubmissionDate>
+        <DateReference>
+            <Month>Abril</Month>
+            <Year>2025</Year>
+        </DateReference>
     </Header>
     <SurgicalData>
         <SurgeryEntry>
-            <Specialty>Ortopedia</Specialty>
-            <WaitingListCounts>
-                <General>300</General>
-                <NonOncological>298</NonOncological>
-                <Oncological>2</Oncological>
-            </WaitingListCounts>
-            <AverageWaitTimeDays>120.5</AverageWaitTimeDays>
+            <ServiceKey>106</ServiceKey>
+            <SurgicalSpeciality>Cirurgia Geral</SurgicalSpeciality>
+            <Priority>3</Priority> 
+            <Stats>
+                <WaitingListCount>25</WaitingListCount>
+                <AverageWaitDays>
+                    <General>15.5</General>
+                    <Oncological>12.5</Oncological>
+                    <NonOncological>0.0</NonOncological>
+                </AverageWaitDays>
+            </Stats>
         </SurgeryEntry>
     </SurgicalData>
 </SurgeryReport>

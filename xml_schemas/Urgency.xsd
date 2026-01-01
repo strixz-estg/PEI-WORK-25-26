@@ -1,71 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
-    <xs:simpleType name="InstitutionIdType">
-        <xs:restriction base="xs:nonNegativeInteger"/>
-    </xs:simpleType>
-    <xs:simpleType name="HospitalNameType">
-        <xs:restriction base="xs:string"/>
-    </xs:simpleType>
-    <xs:simpleType name="TargetPopulationType">
+    
+    <xs:simpleType name="EmergencyCodeType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Adulto"/>
-            <xs:enumeration value="Criança"/>
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="4"/>
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="6"/>
+            <xs:enumeration value="9"/>
+            <xs:enumeration value="10"/>
+            <xs:enumeration value="21"/>
+            <xs:enumeration value="31"/>
+            <xs:enumeration value="URGGER"/>
+            <xs:enumeration value="URGPED"/>
+            <xs:enumeration value="URGGIN"/>
+            <xs:enumeration value="CHUA050D"/>
+            <xs:enumeration value="CHUA75E4"/>
+            <xs:enumeration value="CHTVF6E0"/>
+            <xs:enumeration value="CHTV6429"/>
+            <xs:enumeration value="CHTV289C"/>
+            <xs:enumeration value="CHLN1B20"/>
+            <xs:enumeration value="URGGO"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:complexType name="WaitingListCountsType">
+    
+    <xs:simpleType name="EmergencyDescriptionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Urgência Geral"/>
+            <xs:enumeration value="Urgência Pediátrica"/>
+            <xs:enumeration value="Urgência Obstétrica"/>
+            <xs:enumeration value="Urgência Ginecológica"/>
+            <xs:enumeration value="Urgência Pedopsiquiátrica"/>
+            <xs:enumeration value="Urgência Psiquiátrica"/>
+            <xs:enumeration value="Urgência Polivalente"/>
+            <xs:enumeration value="Urgência Básica"/>
+            <xs:enumeration value="Urgência Oftalmológica"/>
+            <xs:enumeration value="Urgência Obstétrica / Ginecológica"/>
+            <xs:enumeration value="SERVICO URGENCIA BASICO"/>
+            <xs:enumeration value="SU Geral"/>
+            <xs:enumeration value="SU Pediátrica"/>
+            <xs:enumeration value="Urgência Central"/>
+            <xs:enumeration value="Urgência Ginecologia / Obstetricia"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="TriageMetricType">
         <xs:sequence>
-            <xs:element name="General" type="xs:nonNegativeInteger"/>
-            <xs:element name="NonOncological" type="xs:nonNegativeInteger"/>
-            <xs:element name="Oncological" type="xs:nonNegativeInteger"/>
+            <xs:element name="Time" type="xs:decimal" minOccurs="1"/>
+            <xs:element name="Length" type="xs:int" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
-
+    
+    <xs:complexType name="TriageScaleType">
+        <xs:sequence>
+            <xs:element name="NonUrgent" type="TriageMetricType" minOccurs="0"/>  <xs:element name="LessUrgent" type="TriageMetricType" minOccurs="0"/> <xs:element name="Urgent" type="TriageMetricType" minOccurs="0"/>     <xs:element name="VeryUrgent" type="TriageMetricType" minOccurs="0"/> </xs:sequence>
+    </xs:complexType>
+    
     <xs:simpleType name="OpenStateType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Aberta"/>
             <xs:enumeration value="Fechada"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="UrgencyTypologyType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Geral"/>
-            <xs:enumeration value="Pediatrica"/>
-            <xs:enumeration value="Obstetrica"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:complexType name="TriageScaleType">
-        <xs:sequence>
-            <xs:element name="NonUrgent" type="xs:nonNegativeInteger"/>
-            <xs:element name="LessUrgent" type="xs:nonNegativeInteger"/>
-            <xs:element name="Urgent" type="xs:nonNegativeInteger"/>
-            <xs:element name="VeryUrgent" type="xs:nonNegativeInteger"/>
-        </xs:sequence>
-    </xs:complexType>
     
     <xs:element name="UrgencyRegister">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Header">
+                
+                <xs:element name="Header" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="InstitutionId" type="InstitutionIdType"/>
-                            <xs:element name="HospitalName" type="HospitalNameType"/>
-                            <xs:element name="Timestamp" type="xs:dateTime"/>
+                            <xs:element name="InstitutionId" type="xs:int" minOccurs="1"/>
+                            <xs:element name="HospitalName" type="xs:string" minOccurs="1"/>
+                            <xs:element name="LastUpdate" type="xs:dateTime" minOccurs="1"/>
+                            <xs:element name="ExtractionDate" type="xs:dateTime" minOccurs="0"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Data">
+                
+                <xs:element name="Data" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Typology" type="UrgencyTypologyType"/>
-                            <xs:element name="OpenState" type="OpenStateType"/>
-                            <xs:element name="Address" type="xs:string"/>
-                            <xs:element name="WaitingPatients" type="TriageScaleType"/>
-                            <xs:element name="ObservingPatients" type="TriageScaleType"/>
+                            
+                                
+                                        <xs:element name="EmergencyTypeCode" type="EmergencyCodeType" minOccurs="1"/>
+                                     
+                            
+                            <xs:element name="Status" type="OpenStateType" minOccurs="0"/>
+                            
+                            <xs:element name="WaitingTriage" type="TriageScaleType" minOccurs="0"/>
+                            
+                            <xs:element name="ObservationTriage" type="TriageScaleType" minOccurs="0"/>
+                            
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                
             </xs:sequence>
         </xs:complexType>
     </xs:element>
