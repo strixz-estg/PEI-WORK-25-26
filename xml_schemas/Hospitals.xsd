@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <xs:simpleType name="Nuts2Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Norte"/>
+            <xs:enumeration value="Centro"/>
+            <xs:enumeration value="Área Metropolitana de Lisboa"/>
+            <xs:enumeration value="Alentejo"/>
+            <xs:enumeration value="Algarve"/>
+            <xs:enumeration value="Região Autónoma dos Açores"/>
+            <xs:enumeration value="Região Autónoma da Madeira"/>
+            <xs:enumeration value="Oeste e Vale do Tejo"/>
+            <xs:enumeration value="Península de Setúbal"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="PostalCodeType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{4}-\d{3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="EmailType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[^@]+@[^\.]+\..+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:element name="Hospitals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hospital" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="InstitutionId" type="xs:int" minOccurs="1"/>
+                            <xs:element name="HospitalName" minOccurs="1">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:minLength value="1"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Description" type="xs:string" minOccurs="0"/>
+                            
+                            <xs:element name="Location" minOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Address" type="xs:string" minOccurs="1"/>
+                                        <xs:element name="PostalCode" type="PostalCodeType" minOccurs="1"/>
+                                        <xs:element name="City" type="xs:string" minOccurs="1"/>
+                                        <xs:element name="District" type="xs:string" minOccurs="1"/>
+                                        
+                                        <xs:element name="Coordinates" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Lat" type="xs:decimal" minOccurs="1"/>
+                                                    <xs:element name="Long" type="xs:decimal" minOccurs="1"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            
+                            <xs:element name="Contacts" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Phone" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="Email" type="EmailType" minOccurs="0"/>
+                                        <xs:element name="Website" type="xs:string" minOccurs="0"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            
+                            <xs:element name="Region" minOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Nuts1" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="Nuts2" type="Nuts2Type" minOccurs="0"/>
+                                        <xs:element name="Nuts3" type="xs:string" minOccurs="0"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
