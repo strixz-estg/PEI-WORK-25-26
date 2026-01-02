@@ -1,24 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-// Importar o Controlador de Analytics
-const analyticsController = require('../controllers/analyticsController');
+// Importar os Controladores Divididos
+const urgenciaController = require('../controllers/analytics/urgenciaAnalytics');
+const clinicaController = require('../controllers/analytics/clinicaAnalytics');
 
 // ==================================================================
-// ROTAS DE ANALYTICS (Leitura de Dados / Dashboards)
+// URGÊNCIAS
 // ==================================================================
+router.get('/analytics/urgencias/medias', urgenciaController.getUrgencyAverages);           // Q1
+router.get('/analytics/urgencias/percentagens', urgenciaController.getTriagePercentages);   // Q2
+router.get('/analytics/urgencias/pediatria/regiao', urgenciaController.getPediatricWaitingByRegion); // Q3
+router.get('/analytics/urgencias/pediatria/top10', urgenciaController.getTop10Pediatric);   // Q7
+router.get('/analytics/urgencias/evolucao-temporal', urgenciaController.getFlowEvolution);  // Q8
 
-// Query 1: Médias de Urgência (Por Tipologia e Triagem)
-// Exemplo de uso: GET /api/analytics/urgencias/medias?start=2024-01-01&end=2024-12-31
-router.get('/analytics/urgencias/medias', analyticsController.getUrgencyAverages);
-router.get('/analytics/urgencias/percentagens', analyticsController.getTriagePercentages);
-router.get('/analytics/urgencias/pediatria/regiao', analyticsController.getPediatricWaitingByRegion);
-router.get('/analytics/consultas/oncologia', analyticsController.getOncologyComparison);
-router.get('/analytics/cirurgias/medias', analyticsController.getSurgeryStats);
-router.get('/analytics/geral/tempos-totais', analyticsController.getConsultationVsSurgery);
-router.get('/analytics/urgencias/pediatria/top10', analyticsController.getTop10Pediatric);
-router.get('/analytics/urgencias/evolucao-temporal', analyticsController.getFlowEvolution);
-
-// Aqui vamos adicionar as próximas (Query 2, 3, 4...) à medida que as fizermos
+// ==================================================================
+// CLÍNICA (Consultas & Cirurgias)
+// ==================================================================
+router.get('/analytics/cirurgias/estatisticas', clinicaController.getSurgeryStats);// Q5
+router.get('/analytics/consultas/oncologia', clinicaController.getOncologyComparison);      // Q4
+router.get('/analytics/cirurgias/medias', clinicaController.getSurgeryStats);               // Q5
+router.get('/analytics/cruzamento/discrepancia', clinicaController.getConsultationVsSurgery);  // Q6
 
 module.exports = router;

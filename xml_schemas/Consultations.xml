@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConsultationsRegister xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Consultations.xsd">
     <Header>
-        <InstitutionId>151</InstitutionId>
-        <HospitalName>Hospital de Santa Maria</HospitalName>
+        <InstitutionId>151</InstitutionId>   
         <SubmissionDate>2025-03-01T10:00:00</SubmissionDate>
         <DateReference>
             <Month>Março</Month>
