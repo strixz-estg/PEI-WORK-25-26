@@ -1,0 +1,44 @@
+const express = require('express');
+const router = express.Router();
+const Hospital = require('../models/Hospital');
+
+// Função para garantir que é sempre array, mesmo se vier só 1 hospital
+const forceArray = (item) => Array.isArray(item) ? item : [item];
+
+router.post('/', async (req, res) => {
+    try {
+        console.log("--> [API] A processar Hospitais (XML)...");
+        
+        // O XML parser devolve: { Hospitals: { Hospital: [...] } }
+        // Se vier só um, 'Hospital' é objeto. Se vierem vários, é Array.
+        const rawData = req.body.Hospitals && req.body.Hospitals.Hospital;
+        
+        if (!rawData) {
+            return res.status(400).json({ status: 'error', message: 'XML sem dados de Hospital.' });
+        }
+
+        const hospitalsList = forceArray(rawData);
+
+        // Upsert em massa (Atualiza se existir, Cria se não)
+        const promises = hospitalsList.map(h => {
+            return Hospital.findOneAndUpdate(
+                { InstitutionId: h.InstitutionId },
+                h, 
+                { upsert: true, new: true }
+            );
+        });
+
+        await Promise.all(promises);
+
+        res.status(200).json({ 
+            status: 'success', 
+            message: `${hospitalsList.length} hospitais processados.` 
+        });
+
+    } catch (err) {
+        console.error("--> [API] Erro:", err);
+        res.status(500).json({ status: 'error', message: err.message });
+    }
+});
+
+module.exports = router;

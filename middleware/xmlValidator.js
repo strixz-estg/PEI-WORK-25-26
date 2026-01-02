@@ -21,13 +21,19 @@ module.exports = async (req, res, next) => {
 
         // 2. Mapeamento da Rota para o Ficheiro XSD
         let xsdFile = '';
+        
+        // --- ROTAS EXISTENTES ---
         if (req.path.includes('/urgencias')) xsdFile = 'Urgency.xsd';
         else if (req.path.includes('/consultas')) xsdFile = 'Consultations.xsd';
         else if (req.path.includes('/cirurgias')) xsdFile = 'Surgeries.xsd';
-        else return next(); // Rota não validada
+        
+        // --- NOVAS ROTAS (Adicionadas) ---
+        else if (req.path.includes('/hospitais')) xsdFile = 'Hospitals.xsd';
+        else if (req.path.includes('/servicos')) xsdFile = 'Services.xsd';
+        
+        else return next(); // Rota não requer validação XML (ex: analytics)
 
         // Caminho ABSOLUTO para o ficheiro XSD na pasta xml_schemas
-        // O path.resolve garante que o caminho fica correto no Windows (C:\...)
         const schemaPath = path.resolve(__dirname, '../xml_schemas', xsdFile);
         
         // Validação de Segurança: O XSD existe?
@@ -40,13 +46,11 @@ module.exports = async (req, res, next) => {
         }
 
         // 3. Criar Ficheiro Temporário para o XML
-        // O Java prefere validar ficheiro contra ficheiro
         const tempXmlPath = path.join(os.tmpdir(), `temp_payload_${Date.now()}.xml`);
         
         try {
             // === PASSO CRÍTICO: SANITIZAÇÃO ===
             // Remove espaços antes do <?xml e remove o BOM (\uFEFF)
-            // Isto resolve 90% dos erros "Content is not allowed in prolog"
             const cleanXml = req.body.trim().replace(/^\uFEFF/, '');
 
             // Escreve o XML limpo no disco com encoding UTF-8 forçado
@@ -55,7 +59,7 @@ module.exports = async (req, res, next) => {
             // 4. VALIDAR (Ficheiro Temp -> Ficheiro XSD Externo)
             await validator.validateXML({ file: tempXmlPath }, schemaPath);
             
-            console.log('✅ [Validator] Sucesso! XML válido.');
+            console.log(`✅ [Validator] Sucesso! XML válido contra ${xsdFile}.`);
 
             // 5. Converter para JSON e passar à rota
             const parsed = parser.parse(cleanXml);
@@ -65,7 +69,6 @@ module.exports = async (req, res, next) => {
         } catch (err) {
             console.error("❌ [Validator] Falha na validação XSD.");
             
-            // Tratamento de erros para mostrar mensagens úteis
             let errorMessage = "O formato do XML não está correto.";
             
             if (err.messages && err.messages.length > 0) {
@@ -83,11 +86,10 @@ module.exports = async (req, res, next) => {
             });
 
         } finally {
-            // 6. Limpeza (Apagar ficheiro temporário do XML)
+            // 6. Limpeza (Apagar ficheiro temporário)
             if (fs.existsSync(tempXmlPath)) {
                 try { fs.unlinkSync(tempXmlPath); } catch(e) {}
             }
-            // NOTA: Não apagamos o schemaPath porque é o ficheiro real do projeto!
         }
     } else {
         next();

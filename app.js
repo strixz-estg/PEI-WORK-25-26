@@ -23,8 +23,11 @@ const xmlValidationMiddleware = require('./middleware/xmlValidator');
 const urgenciasRoutes = require('./routes/urgencias');
 const consultasRoutes = require('./routes/consultas');
 const cirurgiasRoutes = require('./routes/cirurgias');
+// --- NOVAS ROTAS ---
+const hospitaisRoutes = require('./routes/hospitals'); // Certifica-te que criaste este ficheiro
+const servicosRoutes = require('./routes/services');   // Certifica-te que criaste este ficheiro
 
-// 2. Rotas de Leitura/Analytics (JSON) - NOVO!
+// 2. Rotas de Leitura/Analytics (JSON)
 const apiRoutes = require('./routes/api');
 
 // --- CONFIGURAÇÕES INICIAIS ---
@@ -87,10 +90,11 @@ app.get('/', (req, res) => {
 app.use('/api/urgencias', urgenciasRoutes);
 app.use('/api/consultas', consultasRoutes);
 app.use('/api/cirurgias', cirurgiasRoutes);
+// --- NOVOS ENDPOINTS ---
+app.use('/api/hospitais', hospitaisRoutes); // Endpoint para Hospitals.xml
+app.use('/api/servicos', servicosRoutes);   // Endpoint para Services.xml
 
 // --- B. ROTAS DE ANALYTICS (Enviar JSON) ---
-// Isto liga o teu ficheiro api.js.
-// As rotas ficarão: /api/analytics/urgencias/medias, etc.
 app.use('/api', apiRoutes);
 
 
@@ -123,8 +127,9 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`\n🚀 Servidor Health Time a correr na porta: ${PORT}`);
     console.log(`➜  Local:   http://localhost:${PORT}`);
-    console.log(`➜  Rotas:   /api/urgencias, /api/consultas, /api/cirurgias`);
-    console.log(`➜  Stats:   /api/analytics/...\n`);
+    console.log(`➜  Ingestão: /api/urgencias, /api/consultas, /api/cirurgias`);
+    console.log(`➜  Catálogos: /api/hospitais, /api/servicos`);
+    console.log(`➜  Analytics: /api/analytics/...\n`);
 });
 
 // Graceful Shutdown

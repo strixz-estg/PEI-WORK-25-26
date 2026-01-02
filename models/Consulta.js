@@ -1,28 +1,41 @@
 const mongoose = require('mongoose');
 
 const ConsultaSchema = new mongoose.Schema({
-    ConsultationsRegister: {
-        Header: {
-            InstitutionId: Number,
-            HospitalName: String,
-            ReferencePeriod: String
-        },
-        Data: {
-            Consultation: [{ // Array porque maxOccurs="unbounded"
-                Speciality: String,
-                TargetPopulation: String,
+    // ID Personalizado (Ex: "203_2024_Dezembro")
+    _id: { type: String, required: true },
+
+    Header: {
+        InstitutionId: { type: String, required: true },
+        HospitalName: String,
+        SubmissionDate: Date,
+        DateReference: {
+            Month: String,
+            Year: Number
+        }
+    },
+    Data: {
+        ConsultationEntry: [{
+            _id: false, // <--- IMPORTANTE: Impede a criação de IDs (_id) dentro do array
+            ServiceKey: Number,
+            Speciality: String,
+            Stats: {
                 WaitingListCounts: {
                     General: Number,
                     NonOncological: Number,
                     Oncological: Number
                 },
-                AverageResponseTimes: {
+                AverageWaitDays: {
+                    General: Number,
+                    NonOncological: Number,
+                    Oncological: Number
+                },
+                AverageResponseTime: {
                     Normal: Number,
-                    Priority: Number,
-                    VeryPriority: Number
+                    Prioritario: Number,
+                    MuitoPrioritario: Number
                 }
-            }]
-        }
+            }
+        }]
     }
 }, { timestamps: true });
 

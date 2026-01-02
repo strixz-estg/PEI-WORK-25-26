@@ -55,7 +55,11 @@
     
     <xs:complexType name="TriageScaleType">
         <xs:sequence>
-            <xs:element name="NonUrgent" type="TriageMetricType" minOccurs="0"/>  <xs:element name="LessUrgent" type="TriageMetricType" minOccurs="0"/> <xs:element name="Urgent" type="TriageMetricType" minOccurs="0"/>     <xs:element name="VeryUrgent" type="TriageMetricType" minOccurs="0"/> </xs:sequence>
+            <xs:element name="NonUrgent" type="TriageMetricType" minOccurs="0"/>
+            <xs:element name="LessUrgent" type="TriageMetricType" minOccurs="0"/>
+            <xs:element name="Urgent" type="TriageMetricType" minOccurs="0"/>
+            <xs:element name="VeryUrgent" type="TriageMetricType" minOccurs="0"/>
+        </xs:sequence>
     </xs:complexType>
     
     <xs:simpleType name="OpenStateType">
@@ -73,7 +77,6 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="InstitutionId" type="xs:int" minOccurs="1"/>
-                            <xs:element name="HospitalName" type="xs:string" minOccurs="1"/>
                             <xs:element name="LastUpdate" type="xs:dateTime" minOccurs="1"/>
                             <xs:element name="ExtractionDate" type="xs:dateTime" minOccurs="0"/>
                         </xs:sequence>
@@ -83,17 +86,13 @@
                 <xs:element name="Data" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            
-                                
-                                        <xs:element name="EmergencyTypeCode" type="EmergencyCodeType" minOccurs="1"/>
-                                     
+                            <xs:element name="EmergencyTypeCode" type="EmergencyCodeType" minOccurs="1"/>
                             
                             <xs:element name="Status" type="OpenStateType" minOccurs="0"/>
                             
                             <xs:element name="WaitingTriage" type="TriageScaleType" minOccurs="0"/>
                             
                             <xs:element name="ObservationTriage" type="TriageScaleType" minOccurs="0"/>
-                            
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
