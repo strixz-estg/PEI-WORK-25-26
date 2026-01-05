@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Services.xsd">
+    <Service>
+        <ServiceKey>1</ServiceKey>
+        <Speciality>Psiquiatria - Consulta Geral</Speciality>
+        <TypeCode>2</TypeCode>
+        <PriorityCode>1</PriorityCode>
+    </Service>
+    <Service>
+        <ServiceKey>106</ServiceKey>
+        <Speciality>Cirurgia Geral</Speciality>
+        <TypeCode>1</TypeCode>
+        <PriorityCode>3</PriorityCode>
+    </Service>
+</Services>

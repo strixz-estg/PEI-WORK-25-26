@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConsultationsRegister xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Consultations.xsd">
+    <Header>
+        <InstitutionId>151</InstitutionId>   
+        <SubmissionDate>2025-03-01T10:00:00</SubmissionDate>
+        <DateReference>
+            <Month>Março</Month>
+            <Year>2025</Year>
+        </DateReference>
+    </Header>
+    <Data>
+        <ConsultationEntry>
+            <ServiceKey>12</ServiceKey>
+            <Speciality>Oftalmologia</Speciality>
+            <Stats>
+                <WaitingListCounts>
+                    <General>200</General>
+                    <NonOncological>180</NonOncological>
+                    <Oncological>20</Oncological>
+                </WaitingListCounts>
+                <AverageWaitDays>
+                    <General>45.5</General>
+                    <NonOncological>48.0</NonOncological>
+                    <Oncological>30.2</Oncological>
+                </AverageWaitDays>
+                <AverageResponseTime>
+                    <Normal>60.0</Normal>
+                    <Prioritario>15.5</Prioritario>
+                    <MuitoPrioritario>2.0</MuitoPrioritario>
+                </AverageResponseTime>
+            </Stats>
+        </ConsultationEntry>
+    </Data>
+</ConsultationsRegister>

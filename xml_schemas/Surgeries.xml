@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SurgeryReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Surgeries.xsd">
+    <Header>
+        <InstitutionId>151</InstitutionId>
+        <SubmissionDate>2025-04-05T10:00:00</SubmissionDate>
+        <DateReference>
+            <Month>Abril</Month>
+            <Year>2025</Year>
+        </DateReference>
+    </Header>
+    <SurgicalData>
+        <SurgeryEntry>
+            <ServiceKey>106</ServiceKey>
+            <SurgicalSpeciality>Cirurgia Geral</SurgicalSpeciality>
+            <Stats>
+                <WaitingListCounts>
+                    <Oncological>25</Oncological>
+                    <NonOncological>0</NonOncological>
+                </WaitingListCounts>
+                <AverageWaitDays>
+                    <Oncological>12.5</Oncological>
+                    <NonOncological>0.0</NonOncological>
+                </AverageWaitDays>
+            </Stats>
+        </SurgeryEntry>
+    </SurgicalData>
+</SurgeryReport>
