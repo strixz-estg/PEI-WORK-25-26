@@ -48,7 +48,7 @@ mongoose.connect(mongoURI)
       console.log('╚══════════════════════════════════════════╝');
   })
   .catch(err => {
-      console.error('❌ ERRO CRÍTICO: Não foi possível ligar à Base de Dados.');
+      console.error('ERRO CRÍTICO: Não foi possível ligar à Base de Dados.');
       console.error('Detalhes:', err.message);
   });
 
@@ -80,7 +80,7 @@ app.use(express.json());
 // Health Check
 app.get('/', (req, res) => {
     res.status(200).json({
-        message: 'Health Time API está Online! 🚀',
+        message: 'Health Time API está Online!',
         status: 'OK',
         timestamp: new Date()
     });
@@ -112,7 +112,7 @@ app.use((req, res, next) => {
 
 // Erro 500
 app.use((err, req, res, next) => {
-    console.error('❌ Erro Interno:', err.stack);
+    console.error('Erro Interno:', err.stack);
     res.status(500).json({
         status: 'error',
         message: 'Ocorreu um erro interno no servidor.',
@@ -125,7 +125,7 @@ app.use((err, req, res, next) => {
 // 5. INICIALIZAÇÃO DO SERVIDOR
 // ============================================================================
 app.listen(PORT, () => {
-    console.log(`\n🚀 Servidor Health Time a correr na porta: ${PORT}`);
+    console.log(`\nServidor Health Time a correr na porta: ${PORT}`);
     console.log(`➜  Local:   http://localhost:${PORT}`);
     console.log(`➜  Ingestão: /api/urgencias, /api/consultas, /api/cirurgias`);
     console.log(`➜  Catálogos: /api/hospitais, /api/servicos`);
