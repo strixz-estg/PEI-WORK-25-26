@@ -8,7 +8,7 @@ const { getDates } = require('./utils');
 exports.getUrgencyAverages = async (req, res) => {
     try {
         const { startDate, endDate } = getDates(req.query.start, req.query.end);
-        console.log(`📊 Query 1 (Médias Urgência): ${startDate.toISOString()} - ${endDate.toISOString()}`);
+        console.log(` Query 1 (Médias Urgência): ${startDate.toISOString()} - ${endDate.toISOString()}`);
 
         const stats = await mongoose.connection.db.collection('urgencias').aggregate([
             {
@@ -55,7 +55,7 @@ exports.getTriagePercentages = async (req, res) => {
     try {
         const { startDate, endDate } = getDates(req.query.start, req.query.end);
         
-        console.log(`📊 Query 2 (Total Real): ${startDate.toISOString()} a ${endDate.toISOString()}`);
+        console.log(` Query 2 (Total Real): ${startDate.toISOString()} a ${endDate.toISOString()}`);
 
         const stats = await mongoose.connection.db.collection('urgencias').aggregate([
             {
@@ -247,7 +247,7 @@ exports.getTop10Pediatric = async (req, res) => {
             "URG3", "302000", "CHTV289C"
         ]; 
 
-        console.log(`📊 Query 7 (Top 10 Pediatria - Códigos Totais): ${startDate.toISOString()} a ${endDate.toISOString()}`);
+        console.log(` Query 7 (Top 10 Pediatria - Códigos Totais): ${startDate.toISOString()} a ${endDate.toISOString()}`);
 
         const stats = await mongoose.connection.db.collection('urgencias').aggregate([
             {

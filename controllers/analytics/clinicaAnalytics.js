@@ -145,7 +145,7 @@ exports.getSurgeryStats = async (req, res) => {
             matchStage["SurgicalData.SurgeryEntry.SurgicalSpeciality"] = new RegExp(req.query.specialty, 'i');
         }
 
-        console.log(`📊 Query 5 (Cirurgias por Mês) -> ${logMessage}`);
+        console.log(` Query 5 (Cirurgias por Mês) -> ${logMessage}`);
 
         const stats = await mongoose.connection.db.collection('cirurgias').aggregate([
             // 1. Filtrar pelo Mês/Ano de Referência (Antes de fazer unwind é mais rápido)
