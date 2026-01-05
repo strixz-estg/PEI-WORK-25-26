@@ -5,7 +5,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 (async () => {
     try {
         await mongoose.connect(mongoURI);
-        console.log("🚀 A INICIAR MIGRAÇÃO TOTAL (TODAS AS CONSULTAS)...");
+        console.log("A INICIAR MIGRAÇÃO TOTAL (TODAS AS CONSULTAS)...");
 
         const pipeline = [
             // --- 1. LIMPEZA INICIAL ---

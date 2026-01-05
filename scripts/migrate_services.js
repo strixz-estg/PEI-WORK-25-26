@@ -5,7 +5,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 (async () => {
     try {
         await mongoose.connect(mongoURI);
-        console.log("🔄 A iniciar migração de Serviços (com correção 0->1)...");
+        console.log("A iniciar migração de Serviços (com correção 0->1)...");
 
         const pipeline = [
             {
