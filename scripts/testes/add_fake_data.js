@@ -4,7 +4,7 @@ const uri = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb
 (async () => {
     try {
         await mongoose.connect(uri);
-        console.log("➕ A gerar dados extra (sem apagar os originais)...");
+        console.log("A gerar dados extra (sem apagar os originais)...");
 
         const collection = mongoose.connection.db.collection('urgencias');
         
@@ -36,7 +36,7 @@ const uri = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb
 
         if (newDocs.length > 0) {
             await collection.insertMany(newDocs);
-            console.log(`✅ Adicionados ${newDocs.length} novos registos fictícios.`);
+            console.log(`Adicionados ${newDocs.length} novos registos fictícios.`);
         }
 
         process.exit(0);

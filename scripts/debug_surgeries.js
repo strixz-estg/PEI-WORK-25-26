@@ -6,7 +6,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 (async () => {
     try {
         await mongoose.connect(mongoURI);
-        console.log("🛡️ A TESTAR A REDE DE SEGURANÇA (Regra: Prioridade 0 -> Não Oncológico)...");
+        console.log("A TESTAR A REDE DE SEGURANÇA (Regra: Prioridade 0 -> Não Oncológico)...");
 
         const db = mongoose.connection.db;
 
@@ -14,7 +14,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
         // (Baseado nos debugs anteriores, o Hospital de Braga é um bom candidato)
         const targetHospitalName = "Hospital de Braga"; 
 
-        console.log(`🏥 Alvo do Teste: "${targetHospitalName}"`);
+        console.log(`Alvo do Teste: "${targetHospitalName}"`);
 
         const pipeline = [
             // 1. Filtros Básicos
@@ -81,11 +81,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 
         const results = await db.collection('raw_temposesperaconsultacirurgia').aggregate(pipeline).toArray();
 
-        console.log("\n📊 RESULTADO DO TESTE:");
+        console.log("\nRESULTADO DO TESTE:");
         console.table(results);
 
         // VALIDAÇÃO AUTOMÁTICA
-        console.log("\n📝 ANÁLISE:");
+        console.log("\nANÁLISE:");
         let passed = true;
         
         results.forEach(r => {
@@ -96,18 +96,18 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
         });
 
         if (passed && results.length > 0) {
-            console.log("✅ SUCESSO: Todos os registos com Prioridade 0 foram convertidos corretamente para 'Não Oncológicos'.");
+            console.log("SUCESSO: Todos os registos com Prioridade 0 foram convertidos corretamente para 'Não Oncológicos'.");
             console.log("   A coluna 'Caiu_Em_Oncologico' está a 0, como esperado.");
         } else if (results.length === 0) {
-             console.log("⚠️ AVISO: Não foram encontrados dados com Prioridade 0 neste hospital para testar.");
+             console.log("AVISO: Não foram encontrados dados com Prioridade 0 neste hospital para testar.");
         } else {
-            console.log("❌ FALHA: Alguns registos com Prioridade 0 foram parar ao sítio errado!");
+            console.log("FALHA: Alguns registos com Prioridade 0 foram parar ao sítio errado!");
         }
 
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ Erro:", err);
+        console.error("Erro:", err);
         process.exit(1);
     }
 })();

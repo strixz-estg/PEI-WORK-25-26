@@ -15,7 +15,6 @@ const calcWeightedAvg = (avgA, countA, avgB, countB) => {
     
     // Proteção: Se a média antiga for 0 mas houver contagem, 
     // e a nova média for válida, usamos a nova média como referência para tudo
-    // (Isto evita que o histórico de "zeros" puxe a média para baixo artificialmente)
     if (avgA === 0 && countA > 0 && avgB > 0) avgA = avgB;
 
     const totalDays = (avgA * countA) + (avgB * countB);
@@ -70,7 +69,7 @@ router.post('/', async (req, res) => {
             const xmlCounts = stats.WaitingListCounts || {};
             const xmlResp = stats.AverageResponseTime || {};
 
-            // --- 1. SANITIZAÇÃO PRÉVIA DO XML (Se vier a zero) ---
+            // --- 1. SANITIZAÇÃO PRÉVIA DO XML  ---
             // Se "NonOncological" for 0, tenta usar o "General" do XML
             if (parseFloat(xmlWait.NonOncological || 0) === 0) {
                 const gen = parseFloat(xmlWait.General || 0);
@@ -104,13 +103,8 @@ router.post('/', async (req, res) => {
             const dbCounts = dbEntry.Stats.WaitingListCounts;
             const dbResp = dbEntry.Stats.AverageResponseTime;
 
-            // --- 2. SANITIZAÇÃO PRÉVIA DA BD (O Passo que faltava) ---
-            // Se a BD diz que tem gente (Count > 0) mas a média é 0 dias,
-            // temos de corrigir isso ANTES de calcular a nova média.
-            // Usamos a média Geral da BD como "chute" aproximado.
             if ((dbWait.NonOncological || 0) === 0 && (dbCounts.NonOncological || 0) > 0) {
                 if (dbWait.General > 0) dbWait.NonOncological = dbWait.General;
-                // Se até o General for 0, usamos o valor que veio do XML como "verdade absoluta" para corrigir o passado
                 else if (xmlWait.NonOncological > 0) dbWait.NonOncological = xmlWait.NonOncological;
             }
 
@@ -125,7 +119,7 @@ router.post('/', async (req, res) => {
             const qtdOldNonOnco = dbCounts.NonOncological || 0;
             const qtdOldOnco = dbCounts.Oncological || 0;
 
-            // 3. Média Ponderada (Agora com valores corrigidos)
+            // 3. Média Ponderada 
             dbWait.NonOncological = calcWeightedAvg(dbWait.NonOncological, qtdOldNonOnco, xmlWait.NonOncological, qtdNewNonOnco);
             dbWait.Oncological = calcWeightedAvg(dbWait.Oncological, qtdOldOnco, xmlWait.Oncological, qtdNewOnco);
 
@@ -134,7 +128,7 @@ router.post('/', async (req, res) => {
             dbCounts.Oncological = qtdOldOnco + qtdNewOnco;
             dbCounts.General = dbCounts.NonOncological + dbCounts.Oncological;
 
-            // 5. Recalcular Média Geral (Baseada nas novas médias corrigidas)
+            // 5. Recalcular Média Geral 
             const totalDays = (dbWait.NonOncological * dbCounts.NonOncological) + (dbWait.Oncological * dbCounts.Oncological);
             if (dbCounts.General > 0) {
                 dbWait.General = parseFloat((totalDays / dbCounts.General).toFixed(2));
@@ -156,7 +150,7 @@ router.post('/', async (req, res) => {
         res.status(200).json({ status: 'success', id: doc._id, message: "Dados processados e histórico de zeros corrigido." });
 
     } catch (err) {
-        console.error("❌ Erro:", err.message);
+        console.error("Erro:", err.message);
         res.status(500).json({ status: 'error', message: err.message });
     }
 });

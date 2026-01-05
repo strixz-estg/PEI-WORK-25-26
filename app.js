@@ -134,7 +134,7 @@ app.listen(PORT, () => {
 
 // Graceful Shutdown
 process.on('SIGINT', async () => {
-    console.log('\n🛑 A encerrar servidor...');
+    console.log('\n A encerrar servidor...');
     await mongoose.connection.close();
     console.log('MongoDB desconectado.');
     process.exit(0);

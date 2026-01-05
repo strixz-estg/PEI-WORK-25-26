@@ -9,7 +9,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 
         const pipeline = [
             // --- 1. LIMPEZA INICIAL ---
-            // Convertemos tudo o que é necessário, mas NÃO FILTRAMOS NADA AQUI
             {
                 $addFields: {
                     ServiceKeyInt: { $toInt: "$ServiceKey" },
@@ -31,8 +30,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
             { $unwind: "$service_info" },
 
             // --- 3. FILTRO ÚNICO: TEM DE SER CIRURGIA ---
-            // Aqui dizemos: "Queremos tudo o que seja TypeCode 1".
-            // Independentemente de ser Prio 0, 1, 2 ou 3. Tudo passa.
             { $match: { "service_info.TypeCode": 1 } },
 
             // --- 4. JOIN COM HOSPITAIS ---
@@ -62,7 +59,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                     ServiceKey: "$ServiceKeyInt",
                     SurgicalSpeciality: "$service_info.Speciality", // Nome da Especialidade
                     
-                    // Lemos a prioridade TAL E QUAL como ela vem da base de dados
                     RawPriority: { $toInt: "$service_info.PriorityCode" },
 
                     Count: "$CountInt", 
@@ -83,20 +79,18 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                     HospitalName: { $first: "$HospitalName" },
                     ServiceKey: { $first: "$ServiceKey" }, 
 
-                    // --- AQUI ESTÁ A LÓGICA "APANHA TUDO" ---
                     
-                    // Se a prioridade for EXATAMENTE 3, é oncológico.
+                    // Se a prioridade for 3, é oncológico.
                     SumOnc: { 
                         $sum: { $cond: [{ $eq: ["$RawPriority", 3] }, "$Count", 0] } 
                     },
 
-                    // Se a prioridade for QUALQUER OUTRA COISA (0, 1, 2, 99...), é Não Oncológico.
-                    // Isto garante que NENHUM registo fica para trás.
+                    // Se a prioridade for outra é Não Oncológico.
                     SumNonOnc: { 
                         $sum: { $cond: [{ $ne: ["$RawPriority", 3] }, "$Count", 0] } 
                     },
                     
-                    // Mesma lógica para os tempos (pesos)
+       
                     WeightNonOnc: { $sum: { $cond: [{ $ne: ["$RawPriority", 3] }, { $multiply: ["$Time", "$Count"] }, 0] } },
                     WeightOnc: { $sum: { $cond: [{ $eq: ["$RawPriority", 3] }, { $multiply: ["$Time", "$Count"] }, 0] } }
                 }
@@ -188,11 +182,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
         ];
 
         await mongoose.connection.db.collection('raw_temposesperaconsultacirurgia').aggregate(pipeline).toArray();
-        console.log("✅ MIGRAÇÃO TOTAL CONCLUÍDA.");
+        console.log("MIGRAÇÃO TOTAL CONCLUÍDA.");
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ Erro:", err);
+        console.error("Erro:", err);
         process.exit(1);
     }
 })();

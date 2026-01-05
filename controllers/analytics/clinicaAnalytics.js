@@ -11,7 +11,7 @@ exports.getOncologyComparison = async (req, res) => {
         const month = req.query.month || "Dezembro";
         const year = parseInt(req.query.year) || 2024;
 
-        console.log(`📊 Query 4 (Oncologia): A analisar ${month}/${year}...`);
+        console.log(`Query 4 (Oncologia): A analisar ${month}/${year}...`);
 
         // Filtro inicial de Data
         const dateMatch = {
@@ -41,7 +41,7 @@ exports.getOncologyComparison = async (req, res) => {
 
         } else {
             return res.status(400).json({ 
-                error: "⚠️ Falta a especialidade! Use '?specialty=Ortopedia' ou '?serviceKey=17'" 
+                error: "Falta a especialidade! Use '?specialty=Ortopedia' ou '?serviceKey=17'" 
             });
         }
 
@@ -108,7 +108,7 @@ exports.getOncologyComparison = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Erro Query 4:", error);
+        console.error("Erro Query 4:", error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -118,11 +118,11 @@ exports.getOncologyComparison = async (req, res) => {
 // =================================================================================
 exports.getSurgeryStats = async (req, res) => {
     try {
-        // --- 1. LÓGICA DE FILTRO POR MÊS/ANO (Referência) ---
+        // --- 1. LÓGICA DE FILTRO POR MÊS/ANO  ---
         let matchStage = {};
         let logMessage = "Todos os dados";
 
-        // Filtro por Mês (Obrigatório ou Opcional conforme o requisito)
+        // Filtro por Mês
         if (req.query.month) {
             // Regex para ser case-insensitive (aceita "Dezembro", "dezembro", "DEZEMBRO")
             const monthRegex = new RegExp(`^${req.query.month.trim()}$`, 'i');
@@ -130,7 +130,7 @@ exports.getSurgeryStats = async (req, res) => {
             logMessage = `Mês: ${req.query.month}`;
         }
 
-        // Filtro por Ano (Recomendado para não misturar anos diferentes)
+        // Filtro por Ano 
         if (req.query.year) {
             // Aceita string "2024" ou int 2024
             const yearVal = parseInt(req.query.year); // Tenta converter para número
@@ -154,8 +154,7 @@ exports.getSurgeryStats = async (req, res) => {
             // 2. Abrir o array de cirurgias
             { $unwind: "$SurgicalData.SurgeryEntry" },
 
-            // 3. (Opcional) Se houver filtro de especialidade, aplica-se aqui também
-            // para garantir que só processamos o necessário
+            // 3.  Se houver filtro de especialidade, aplica-se aqui também para garantir que só processamos o necessário
             ...(req.query.specialty ? [{ $match: { "SurgicalData.SurgeryEntry.SurgicalSpeciality": new RegExp(req.query.specialty, 'i') } }] : []),
 
             // 4. Agrupar por Especialidade
@@ -196,12 +195,12 @@ exports.getSurgeryStats = async (req, res) => {
 
         res.json({ 
             filter: { month: req.query.month, year: req.query.year },
-            count: stats.length, // Agora deve dar 39 (ou perto disso)
+            count: stats.length, 
             results: stats 
         });
         
     } catch (error) {
-        console.error("❌ Erro Query 5:", error);
+        console.error("Erro Query 5:", error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -223,7 +222,7 @@ exports.getConsultationVsSurgery = async (req, res) => {
         if (req.query.month) matchStage["Header.DateReference.Month"] = new RegExp(`^${req.query.month.trim()}$`, 'i');
         if (req.query.year) matchStage["Header.DateReference.Year"] = { $in: [parseInt(req.query.year), req.query.year.toString()] };
 
-        console.log(`📊 Query 6 (Cruzamento) -> Hospital: ${req.query.hospital || 'Todos'} | Mês: ${req.query.month || 'Todos'}`);
+        console.log(`Query 6 (Cruzamento) -> Hospital: ${req.query.hospital || 'Todos'} | Mês: ${req.query.month || 'Todos'}`);
 
         const stats = await mongoose.connection.db.collection('consultas').aggregate([
             // 1. Filtrar Consultas
@@ -302,7 +301,7 @@ exports.getConsultationVsSurgery = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Erro Query 6:", error);
+        console.error("Erro Query 6:", error);
         res.status(500).json({ error: error.message });
     }
 };

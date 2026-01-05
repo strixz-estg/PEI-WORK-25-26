@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-// Ligação à base de dados de ORIGEM (db_hospital)
 const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb.net/db_hospital?appName=CLUSTER-PEI-GROUP7';
 
 (async () => {
     try {
         await mongoose.connect(mongoURI);
-        console.log("🔄 A iniciar migração de Urgências (Correção Datas + Literal)...");
+        console.log("A iniciar migração de Urgências (Correção Datas + Literal)...");
 
         const pipeline = [
             {
@@ -39,7 +38,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                             ]
                         },
                         
-                        // CORREÇÃO AQUI: Usar $toDate em vez de $dateFromString
                         // O $toDate aceita tanto Strings como Datas já existentes
                         LastUpdate: { $toDate: "$LastUpdate" },
                         ExtractionDate: { $toDate: "$extractionDate" }
@@ -109,7 +107,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                 }
             },
             {
-                // Gravar na DB de DESTINO (healthtime)
                 $merge: {
                     into: { db: "healthtime", coll: "urgencias" },
                     whenMatched: "replace",
@@ -120,11 +117,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 
         await mongoose.connection.db.collection('raw_temposesperaemergencia').aggregate(pipeline).toArray();
         
-        console.log("✅ Urgências migradas com sucesso!");
+        console.log("Urgências migradas com sucesso!");
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ Erro:", err);
+        console.error("Erro:", err);
         process.exit(1);
     }
 })();

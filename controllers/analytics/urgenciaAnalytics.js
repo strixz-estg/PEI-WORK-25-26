@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getDates } = require('./utils'); // Importar o helper
+const { getDates } = require('./utils');
 
 // Query 1: Médias
 // =================================================================================
@@ -90,9 +90,6 @@ exports.getTriagePercentages = async (req, res) => {
                 }
             },
             
-            // ❌ APAGUEI A LINHA DO $MATCH AQUI.
-            // Agora entram todos os registos, mesmo os que têm 0 pessoas.
-
             {
                 $group: {
                     _id: { 
@@ -167,7 +164,7 @@ exports.getTriagePercentages = async (req, res) => {
         });
         
     } catch (error) {
-        console.error("❌ Erro Query 2:", error);
+        console.error("Erro Query 2:", error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -200,9 +197,6 @@ exports.getPediatricWaitingByRegion = async (req, res) => {
             },
             { $unwind: "$hospitalInfo" },
 
-            // --- AQUI ESTÁ A MAGIA ---
-            // Ao agrupar por NUTS 2, o "Baixo Alentejo" e "Alentejo Central"
-            // ficam ambos dentro do grupo "Alentejo".
             {
                 $group: {
                     _id: "$hospitalInfo.Region.Nuts2", 
@@ -247,7 +241,7 @@ exports.getTop10Pediatric = async (req, res) => {
     try {
         const { startDate, endDate } = getDates(req.query.start, req.query.end);
         
-        // --- LISTA COMPLETA DE CÓDIGOS (Baseada na tua pesquisa) ---
+        // --- LISTA COMPLETA DE CÓDIGOS  ---
         const PEDIATRIC_CODES = [
             "1", "2", "URGPED", "10012", "PED", 
             "URG3", "302000", "CHTV289C"
@@ -259,12 +253,10 @@ exports.getTop10Pediatric = async (req, res) => {
             {
                 $match: {
                     "Header.LastUpdate": { $gte: startDate, $lte: endDate },
-                    // O segredo está aqui: aceitar qualquer um destes códigos
                     "Data.EmergencyTypeCode": { $in: PEDIATRIC_CODES } 
                 }
             },
             {
-                // Calcular a média deste snapshot
                 $project: {
                     InstitutionId: "$Header.InstitutionId",
                     HospitalName: "$Header.HospitalName",
@@ -324,7 +316,7 @@ exports.getTop10Pediatric = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Erro Query 7:", error);
+        console.error("Erro Query 7:", error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -341,7 +333,7 @@ exports.getFlowEvolution = async (req, res) => {
             "URGGER", "CHTV6429", "10011", "301000"
         ];
 
-        console.log(`📊 Query 8 (Evolução Geral - 15min): ${startDate.toISOString()} a ${endDate.toISOString()}`);
+        console.log(` Query 8 (Evolução Geral - 15min): ${startDate.toISOString()} a ${endDate.toISOString()}`);
 
         const stats = await mongoose.connection.db.collection('urgencias').aggregate([
             {
@@ -430,7 +422,7 @@ exports.getFlowEvolution = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Erro Query 8:", error);
+        console.error("Erro Query 8:", error);
         res.status(500).json({ error: error.message });
     }
 };

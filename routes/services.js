@@ -4,7 +4,7 @@ const Service = require('../models/Service');
 
 const forceArray = (item) => Array.isArray(item) ? item : [item];
 
-// --- FUNÇÕES DE TRADUÇÃO (Mapas de Negócio) ---
+// --- FUNÇÕES DE TRADUÇÃO ---
 const getPriorityDescription = (code) => {
     switch (parseInt(code)) {
         case 1: return "Normal (Nao Oncologico)";

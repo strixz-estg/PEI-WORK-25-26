@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Aponta para a origem: db_hospital
 const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb.net/db_hospital?appName=CLUSTER-PEI-GROUP7';
 
 (async () => {
@@ -16,8 +15,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                     Speciality: 1,
                     TypeCode: 1,
                     
-                    // --- CORREÇÃO DE CÓDIGO (0 -> 1) ---
-                    // Se for 0, força 1. Se for null, força 1. Caso contrário, mantém.
                     PriorityCode: {
                         $cond: {
                             if: { $or: [ { $eq: ["$PriorityCode", 0] }, { $not: ["$PriorityCode"] } ] },
@@ -25,10 +22,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                             else: "$PriorityCode"
                         }
                     },
-                    
-                    // --- DESCRIÇÕES AUTOMÁTICAS (Baseadas no código já corrigido acima) ---
-                    // Nota: Como o $project corre em paralelo, usamos a mesma lógica condicional 
-                    // dentro do switch ou repetimos a lógica para garantir consistência.
+                    // --- DESCRIÇÕES AUTOMÁTICAS ---
                     TypeDescription: {
                         $switch: {
                             branches: [
@@ -41,8 +35,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                     PriorityDescription: {
                         $switch: {
                             branches: [
-                                // A lógica aqui tem de prever o valor original, ou usamos $let para ser mais limpo.
-                                // Simplificação: Assumimos que 0 e 1 dão a mesma descrição.
+                                // Assumimos que 0 e 1 dão a mesma descrição.
                                 { case: { $in: ["$PriorityCode", [0, 1]] }, then: "Normal (Nao Oncologico)" },
                                 { case: { $eq: ["$PriorityCode", 2] }, then: "Prioritário (Nao Oncologico)" },
                                 { case: { $eq: ["$PriorityCode", 3] }, then: "Muito Prioritário (Oncologico)" }
@@ -53,7 +46,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                 }
             },
             {
-                // Gravar na DB de destino (healthtime)
                 $merge: {
                     into: { db: "healthtime", coll: "services" },
                     on: "ServiceKey",
@@ -65,11 +57,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
 
         await mongoose.connection.db.collection('raw_servicos').aggregate(pipeline).toArray();
         
-        console.log("✅ Serviços migrados e corrigidos (0->1) com sucesso!");
+        console.log("Serviços migrados e corrigidos (0->1) com sucesso!");
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ Erro:", err);
+        console.error("Erro:", err);
         process.exit(1);
     }
 })();

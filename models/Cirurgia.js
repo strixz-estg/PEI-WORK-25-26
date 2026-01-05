@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const CirurgiaSchema = new mongoose.Schema({
-    // --- A CORREÇÃO É ESTA LINHA ---
     _id: { type: String }, // Avisa o Mongo que o ID é uma String personalizada
     // -------------------------------
 

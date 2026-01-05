@@ -38,7 +38,7 @@ module.exports = async (req, res, next) => {
         
         // Validação de Segurança: O XSD existe?
         if (!fs.existsSync(schemaPath)) {
-            console.error(`❌ ERRO: XSD não encontrado em: ${schemaPath}`);
+            console.error(`ERRO: XSD não encontrado em: ${schemaPath}`);
             return res.status(500).json({ 
                 status: 'error', 
                 message: 'Erro de configuração no servidor (XSD em falta).' 
@@ -49,7 +49,6 @@ module.exports = async (req, res, next) => {
         const tempXmlPath = path.join(os.tmpdir(), `temp_payload_${Date.now()}.xml`);
         
         try {
-            // === PASSO CRÍTICO: SANITIZAÇÃO ===
             // Remove espaços antes do <?xml e remove o BOM (\uFEFF)
             const cleanXml = req.body.trim().replace(/^\uFEFF/, '');
 
@@ -59,7 +58,7 @@ module.exports = async (req, res, next) => {
             // 4. VALIDAR (Ficheiro Temp -> Ficheiro XSD Externo)
             await validator.validateXML({ file: tempXmlPath }, schemaPath);
             
-            console.log(`✅ [Validator] Sucesso! XML válido contra ${xsdFile}.`);
+            console.log(`[Validator] Sucesso! XML válido contra ${xsdFile}.`);
 
             // 5. Converter para JSON e passar à rota
             const parsed = parser.parse(cleanXml);
@@ -67,7 +66,7 @@ module.exports = async (req, res, next) => {
             next();
 
         } catch (err) {
-            console.error("❌ [Validator] Falha na validação XSD.");
+            console.error("[Validator] Falha na validação XSD.");
             
             let errorMessage = "O formato do XML não está correto.";
             

@@ -40,11 +40,11 @@ router.post('/', async (req, res) => {
         const novoRegisto = new Urgencia(data);
         await novoRegisto.save();
         
-        console.log(`✅ Urgência gravada: ${hospital.HospitalName}`);
+        console.log(`Urgência gravada: ${hospital.HospitalName}`);
         res.status(201).json({ status: 'success', id: novoRegisto._id });
 
     } catch (err) {
-        console.error("❌ Erro:", err.message);
+        console.error("Erro:", err.message);
         res.status(500).json({ status: 'error', message: err.message });
     }
 });

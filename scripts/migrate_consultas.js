@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Ajusta a string de conexão se necessário
 const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mongodb.net/db_hospital?appName=CLUSTER-PEI-GROUP7';
 
 (async () => {
@@ -31,7 +30,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
             { $unwind: "$service_info" },
 
             // --- 3. FILTRO: APENAS CONSULTAS ---
-            // TypeCode 2 = Consultas
             { $match: { "service_info.TypeCode": 2 } },
 
             // --- 4. JOIN COM HOSPITAIS ---
@@ -68,7 +66,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
             },
 
             // --- 6. AGRUPAMENTO POR ESPECIALIDADE ---
-            // Aqui consolidamos as várias prioridades (1, 2, 3) numa única entrada de especialidade
             {
                 $group: {
                     _id: {
@@ -94,7 +91,6 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                     WeightOnc: { $sum: { $cond: [{ $eq: ["$RawPriority", 3] }, { $multiply: ["$Time", "$Count"] }, 0] } },
 
                     // --- TEMPOS ESPECÍFICOS (Para AverageResponseTime) ---
-                    // Capturamos o tempo "cru" de cada prioridade para preencher o objeto final
                     TimeNormal: { $max: { $cond: [{ $eq: ["$RawPriority", 1] }, "$Time", 0] } },       // Prioridade 1
                     TimePrioritario: { $max: { $cond: [{ $eq: ["$RawPriority", 2] }, "$Time", 0] } },  // Prioridade 2
                     TimeMuitoPrioritario: { $max: { $cond: [{ $eq: ["$RawPriority", 3] }, "$Time", 0] } } // Prioridade 3
@@ -104,13 +100,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
             // --- 7. FORMATAR O OBJETO DA CONSULTA (Igual ao JSON pedido) ---
             {
                 $project: {
-                    // Campos para agrupar depois
                     InstitutionId: "$_id.InstitutionId",
                     HospitalName: "$HospitalName",
                     Year: "$_id.Year",
                     Month: "$_id.Month",
                     
-                    // O Objeto Entry
                     EntryObject: {
                         ServiceKey: "$ServiceKey",
                         Speciality: "$_id.Speciality",
@@ -145,7 +139,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                 }
             },
 
-            // --- 8. AGRUPAMENTO FINAL POR HOSPITAL (Estrutura do Documento) ---
+            // --- 8. AGRUPAMENTO FINAL POR HOSPITAL  ---
             {
                 $group: {
                     _id: {
@@ -154,7 +148,7 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
                         Month: "$Month"
                     },
                     HospitalName: { $first: "$HospitalName" },
-                    ConsultationEntryList: { $push: "$EntryObject" } // Push sem gerar _id automático extra
+                    ConsultationEntryList: { $push: "$EntryObject" } 
                 }
             },
 
@@ -194,11 +188,11 @@ const mongoURI = 'mongodb+srv://GROUP-7:GROUP-7PEI@cluster-pei-group7.ee7vrls.mo
         ];
 
         await mongoose.connection.db.collection('raw_temposesperaconsultacirurgia').aggregate(pipeline).toArray();
-        console.log("✅ MIGRAÇÃO DE CONSULTAS CONCLUÍDA.");
+        console.log(" MIGRAÇÃO DE CONSULTAS CONCLUÍDA.");
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ Erro:", err);
+        console.error("Erro:", err);
         process.exit(1);
     }
 })();
